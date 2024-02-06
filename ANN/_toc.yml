@@ -1,0 +1,11 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: 00_Intro
+chapters:
+- file: 01_Introduction_to_ANN.ipynb
+- file: 02_Perceptron_and_MultiLayer_Neural_Network.ipynb
+- file: 03_Practical_Implementation_Dataset_Preprocessing.ipynb
+- file: 04_Practical_Implementation_ANN_Modelling_and_Optimization_Pipeline.ipynb
+- file: 05_Comparison_Random_Forest_vs_Neural_Network.ipynb

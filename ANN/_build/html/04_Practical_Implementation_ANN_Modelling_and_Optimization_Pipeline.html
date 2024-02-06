@@ -1,0 +1,1476 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Practical Implementation &#8212; Artificial Neural Networks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04_Practical_Implementation_ANN_Modelling_and_Optimization_Pipeline';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Extra: Random Forest vs Artificial Neural Network" href="05_Comparison_Random_Forest_vs_Neural_Network.html" />
+    <link rel="prev" title="Data Preparation" href="03_Practical_Implementation_Dataset_Preprocessing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="00_Intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Artificial Neural Networks - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Artificial Neural Networks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="00_Intro.html">
+                    Artificial Neural Networks Project
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_Introduction_to_ANN.html">What are Artificial Neural Networks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_Perceptron_and_MultiLayer_Neural_Network.html">Perceptron</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="03_Practical_Implementation_Dataset_Preprocessing.html">Data Preparation</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Practical Implementation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="05_Comparison_Random_Forest_vs_Neural_Network.html">Extra: Random Forest vs Artificial Neural Network</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F04_Practical_Implementation_ANN_Modelling_and_Optimization_Pipeline.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/04_Practical_Implementation_ANN_Modelling_and_Optimization_Pipeline.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Practical Implementation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Practical Implementation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#baseline-accuracy">Baseline Accuracy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#splitting-the-training-set-in-train-and-validation">Splitting the Training Set in Train and Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-functions">Plotting Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-functions">Evaluation Functions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-metrics">Evaluation Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f1-score">F1 Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision">Precision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recall">Recall</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-curve">ROC Curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-model">Simple Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weights">Weights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-change-in-accuracy-and-loss-during-training">Plot the change in accuracy and loss during training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#early-stopping">Early Stopping</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-model">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-model">Complex Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Weights</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#class-weight-model">Class Weight Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Plot the change in accuracy and loss during training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trying-to-stabilize-the-model">Trying to stabilize the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-set-considerations-what-happened">Test set considerations: What happened ?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changing-the-point-of-view-evaluate-the-model">Changing the point of view: evaluate the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-two-models">Compare the two models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-on-test-set">Evaluation on Test Set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-roc-curves">Plotting ROC Curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-model">Final Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tuning">Fine Tuning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Testing</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-to-sum-up">Conclusion : To sum up</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#save-the-final-model">Save the final model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="practical-implementation">
+<h1>Practical Implementation<a class="headerlink" href="#practical-implementation" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tf</span>
+<span class="o">%</span><span class="k">store</span> -r X_train_80 y_train_80 X_test_20 y_test_20
+<span class="n">X_train_80</span> <span class="o">=</span> <span class="n">X_train_80</span>
+<span class="n">y_train_80</span> <span class="o">=</span> <span class="n">y_train_80</span>
+
+<span class="n">X_test_20</span> <span class="o">=</span> <span class="n">X_test_20</span>
+<span class="n">y_test_20</span> <span class="o">=</span> <span class="n">y_test_20</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="baseline-accuracy">
+<h2>Baseline Accuracy<a class="headerlink" href="#baseline-accuracy" title="Link to this heading">#</a></h2>
+<p>The baseline accuracy is the accuracy that can be achieved by a model that always predicts the majority class. It’s a useful metric to have because it allows us to know the minimum performance that a model should achieve.</p>
+<p>In general if a model cannot outperform the baseline, it’s not worth using it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">baseline_acc</span> <span class="o">=</span> <span class="n">y_train_80</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Majority Class Baseline Accuracy On Train: </span><span class="si">{</span><span class="n">baseline_acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Majority Class Baseline Accuracy On Train: 0.9150
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">baseline_acc_test</span> <span class="o">=</span> <span class="n">y_test_20</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Majority Class Baseline Accuracy On Test: </span><span class="si">{</span><span class="n">baseline_acc_test</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Majority Class Baseline Accuracy On Test: 0.9150
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="splitting-the-training-set-in-train-and-validation">
+<h2>Splitting the Training Set in Train and Validation<a class="headerlink" href="#splitting-the-training-set-in-train-and-validation" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train_split</span><span class="p">,</span> <span class="n">X_val_split</span><span class="p">,</span> <span class="n">y_train_split</span><span class="p">,</span> <span class="n">y_val_split</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_train_80</span><span class="p">,</span> <span class="n">y_train_80</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_train_80</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will use <strong>the same</strong> validation set for all the models, in order to have a fair comparison.</p>
+</section>
+<section id="utility-functions">
+<h2>Utility Functions<a class="headerlink" href="#utility-functions" title="Link to this heading">#</a></h2>
+<section id="plotting-functions">
+<h3>Plotting Functions<a class="headerlink" href="#plotting-functions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utility_functions</span> <span class="kn">import</span> <span class="n">plot_acc_loss</span>
+<span class="kn">from</span> <span class="nn">utility_functions</span> <span class="kn">import</span> <span class="n">plot_roc_curve</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluation-functions">
+<h3>Evaluation Functions<a class="headerlink" href="#evaluation-functions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utility_functions</span> <span class="kn">import</span> <span class="n">evaluate_classification_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluation-metrics">
+<h2>Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Link to this heading">#</a></h2>
+<section id="f1-score">
+<h3>F1 Score<a class="headerlink" href="#f1-score" title="Link to this heading">#</a></h3>
+<p>The accuracy is not always the best metric to use when evaluating a classification model. A silly example could be a model that always predicts the majority class. This model would have a very high accuracy, but it would not be useful at all. The F1 score is a metric that combines precision and recall. It is defined as the harmonic mean of precision and recall: <span class="math notranslate nohighlight">\(F1 = 2 \cdot \frac{precision \cdot recall}{precision + recall}\)</span></p>
+</section>
+<section id="precision">
+<h3>Precision<a class="headerlink" href="#precision" title="Link to this heading">#</a></h3>
+<p>Precision is the ratio of true positives to the sum of true positives and false positives. It measures how many of the samples predicted as positive are actually positive. <span class="math notranslate nohighlight">\(precision = \frac{TP}{TP + FP}\)</span></p>
+</section>
+<section id="recall">
+<h3>Recall<a class="headerlink" href="#recall" title="Link to this heading">#</a></h3>
+<p>Recall is the ratio of true positives to the sum of true positives and false negatives. It measures how many of the positive samples are captured by the positive predictions. <span class="math notranslate nohighlight">\(recall = \frac{TP}{TP + FN}\)</span></p>
+</section>
+<section id="roc-curve">
+<h3>ROC Curve<a class="headerlink" href="#roc-curve" title="Link to this heading">#</a></h3>
+<p>The ROC curve is an instrument used to visualize the performance of a binary classification model. It plots the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings.
+The closer the curve is to the top left corner, the better the model is. The area under the curve (AUC) is also a useful metric to compare different models. In general: The higher the AUC, the better the model is.</p>
+<p><img alt="roc" src="_images/roc.png" /></p>
+<p>Image credit: <a class="reference external" href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=it#:~:text=AUC%20stands%20for%20%22Area%20under,across%20all%20possible%20classification%20thresholds">https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=it#:~:text=AUC stands for “Area under,across all possible classification thresholds</a>.</p>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="simple-model">
+<h1>Simple Model<a class="headerlink" href="#simple-model" title="Link to this heading">#</a></h1>
+<p>Since there are few features, probably a simple model will be enough. Always for this reason, we wont use the dropout technique, which is used in complex models to avoid overfitting.</p>
+<section id="training">
+<h2>Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.src.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.src.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">simple_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+<span class="n">simple_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span>
+                <span class="n">input_dim</span><span class="o">=</span><span class="n">X_train_80</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+                <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+
+<span class="n">simple_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span> <span class="c1">## relu is more stable and faster than sigmoid</span>
+
+
+<span class="n">simple_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="weights">
+<h3>Weights<a class="headerlink" href="#weights" title="Link to this heading">#</a></h3>
+<p>save the initial weights to use them later for a fair comparison with the model with class weights</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">simple_model</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adam</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="n">simple_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.src.callbacks</span> <span class="kn">import</span> <span class="n">EarlyStopping</span>
+
+<span class="n">early_stopping</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">simple_hist</span> <span class="o">=</span> <span class="n">simple_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_split</span><span class="p">,</span> <span class="n">y_train_split</span><span class="p">,</span> 
+                 <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                 <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> 
+                 <span class="n">validation_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_val_split</span><span class="p">,</span> <span class="n">y_val_split</span><span class="p">),</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stopping</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Restoring model weights from the end of the best epoch: 31.
+Epoch 41: early stopping
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-the-change-in-accuracy-and-loss-during-training">
+<h3>Plot the change in accuracy and loss during training<a class="headerlink" href="#plot-the-change-in-accuracy-and-loss-during-training" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_acc_loss</span><span class="p">(</span><span class="n">simple_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f22d8ab8673435016ebef85205a7f764ba8709cde9a58de5cba656836f7e786a.png" src="_images/f22d8ab8673435016ebef85205a7f764ba8709cde9a58de5cba656836f7e786a.png" />
+<img alt="_images/4f81a8a28f4e4a4f4d73f3828deae32bc54be48b89309fd8ad767625a6d835ab.png" src="_images/4f81a8a28f4e4a4f4d73f3828deae32bc54be48b89309fd8ad767625a6d835ab.png" />
+</div>
+</div>
+</section>
+<section id="early-stopping">
+<h3>Early Stopping<a class="headerlink" href="#early-stopping" title="Link to this heading">#</a></h3>
+<p>Early Stopping is a technique that automatically stops the training of a model when its performance on a validation set stops improving. It relies on two key parameters: “patience” (representing the number of epochs the model will wait without seeing improvements in the performance of the validation set) and “restore_best_weights” (restores the weights from the best epoch). This way, there’s no need to manually decide the number of epochs; the model stops when it has learned enough without overfitting. This helps us achieve a model that generalizes well to new data without adapting excessively to the training set.</p>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">simple_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 0s 702us/step
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.97      1.00      0.98     18300
+           1       1.00      0.66      0.80      1700
+
+    accuracy                           0.97     20000
+   macro avg       0.98      0.83      0.89     20000
+weighted avg       0.97      0.97      0.97     20000
+
+
+Confusion Matrix:
+</pre></div>
+</div>
+<img alt="_images/882e880a94b8cc1b3478e29a7dc85d0950d0aabb774ae2647cd229418f24fc43.png" src="_images/882e880a94b8cc1b3478e29a7dc85d0950d0aabb774ae2647cd229418f24fc43.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">simple_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 727us/step
+</pre></div>
+</div>
+<img alt="_images/a29595e99cb771174770edcc8d2d50d1afefd6a28cee651bd5e25cd1f317215c.png" src="_images/a29595e99cb771174770edcc8d2d50d1afefd6a28cee651bd5e25cd1f317215c.png" />
+</div>
+</div>
+</section>
+<section id="considerations">
+<h2>Considerations<a class="headerlink" href="#considerations" title="Link to this heading">#</a></h2>
+<p>What if the model is too simple? What if it’s not able to capture the complexity of the data? We can try to make it more complex by adding more layers and neurons. This will allow the model to learn more complex patterns in the data. However, this comes at the cost of increased training time and a higher risk of overfitting.</p>
+<p>Even though the model is simple, it’s able to achieve an AUC of 0.98.</p>
+<section id="saving-the-model">
+<h3>Saving the model<a class="headerlink" href="#saving-the-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">simple_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;simple_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: simple_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: simple_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="complex-model">
+<h1>Complex Model<a class="headerlink" href="#complex-model" title="Link to this heading">#</a></h1>
+<p>We can create a more complex model by adding more layers and neurons. This will allow the model to learn more complex patterns in the data. However, this comes at the cost of increased training time and a higher risk of overfitting.</p>
+<section id="id1">
+<h2>Training<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.src.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.src.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+
+<span class="n">complex_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+<span class="n">complex_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span>
+                       <span class="n">input_dim</span><span class="o">=</span><span class="n">X_train_80</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                       <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+
+<span class="n">complex_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>  <span class="c1">## The New Layer</span>
+<span class="n">complex_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>  <span class="c1">## relu is more stable and faster than sigmoid</span>
+
+<span class="n">complex_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id2">
+<h3>Weights<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Note that in this case we won’t use the weights of the simple model because the architecture is different.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adam</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="n">complex_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
+
+
+<span class="n">complex_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_split</span><span class="p">,</span> <span class="n">y_train_split</span><span class="p">,</span> 
+                 <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                 <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> 
+                 <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val_split</span><span class="p">,</span> <span class="n">y_val_split</span><span class="p">),</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stopping</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Restoring model weights from the end of the best epoch: 24.
+Epoch 34: early stopping
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;keras.src.callbacks.History at 0x17d4841d0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h2>Testing<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">complex_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 0s 617us/step
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.97      1.00      0.99     18300
+           1       1.00      0.67      0.81      1700
+
+    accuracy                           0.97     20000
+   macro avg       0.99      0.84      0.90     20000
+weighted avg       0.97      0.97      0.97     20000
+
+
+Confusion Matrix:
+</pre></div>
+</div>
+<img alt="_images/7090575a3e76a94f520fee22bae8ebb8311053df9d1396a68e84187ad86780c3.png" src="_images/7090575a3e76a94f520fee22bae8ebb8311053df9d1396a68e84187ad86780c3.png" />
+</div>
+</div>
+</section>
+<section id="id4">
+<h2>Considerations<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>The complex of the model does not justify the performance.
+I would prefer the simple model because it’s faster to train. The complex model is more prone to overfitting and <strong>it’s not worth</strong> the effort.</p>
+<section id="id5">
+<h3>Saving the model<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">complex_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;complex_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: complex_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: complex_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="class-weight-model">
+<h1>Class Weight Model<a class="headerlink" href="#class-weight-model" title="Link to this heading">#</a></h1>
+<p>We can try to improve the simple_model by balancing the classes. We can do this by assigning weights to the classes. The weights will be used to penalize the loss function during training. The idea is to increase the loss for the minority class and decrease the loss for the majority class. This will force the model to pay more attention to the minority class and hopefully improve the results.</p>
+<section id="id6">
+<h2>Training<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">y_train_80</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>diabetes
+0    73200
+1     6800
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">compute_class_weight</span>
+
+<span class="n">y_train_series</span> <span class="o">=</span> <span class="n">y_train_80</span>
+
+<span class="c1"># Compute class weights</span>
+<span class="n">class_weights</span> <span class="o">=</span> <span class="n">compute_class_weight</span><span class="p">(</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train_series</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train_series</span><span class="p">)</span>
+<span class="c1"># In this way the weight of each class is inversely proportional to its frequency</span>
+
+<span class="c1"># Build the class weight dictionary</span>
+<span class="n">class_weight_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">class_weights</span><span class="p">))</span>
+
+<span class="c1"># Define the model</span>
+<span class="n">weighted_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="n">X_train_80</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="n">adam</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Compile the model with class weights</span>
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
+
+<span class="c1"># Train the model with class weights</span>
+<span class="n">hist</span> <span class="o">=</span> <span class="n">weighted_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_split</span><span class="p">,</span> <span class="n">y_train_split</span><span class="p">,</span>
+          <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight_dict</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+          <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val_split</span><span class="p">,</span> <span class="n">y_val_split</span><span class="p">),</span>
+          <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stopping</span><span class="p">],</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="s1">&#39;firstTrainWM.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Restoring model weights from the end of the best epoch: 25.
+Epoch 35: early stopping
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id7">
+<h3>Plot the change in accuracy and loss during training<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_acc_loss</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/146924ced3f52deaa9a6b41630e0364f9081b7e299500916a99a9c6a318a5945.png" src="_images/146924ced3f52deaa9a6b41630e0364f9081b7e299500916a99a9c6a318a5945.png" />
+<img alt="_images/168c81fb01392306e8cbe52bf095826b74c530d140316ec202f5ef32c2ed7f85.png" src="_images/168c81fb01392306e8cbe52bf095826b74c530d140316ec202f5ef32c2ed7f85.png" />
+</div>
+</div>
+<p>The instability in the loss is likely a result of the model assigning excessive importance to the minority class. This suggests that the model may be attempting to overly adapt to the class with the highest weight, compromising overall stability.</p>
+</section>
+<section id="trying-to-stabilize-the-model">
+<h3>Trying to stabilize the model<a class="headerlink" href="#trying-to-stabilize-the-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">early_stopping</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">weighted_model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;firstTrainWM.h5&#39;</span><span class="p">)</span>
+
+<span class="n">stable_hist</span> <span class="o">=</span> <span class="n">weighted_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_split</span><span class="p">,</span> <span class="n">y_train_split</span><span class="p">,</span>
+          <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight_dict</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+          <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="c1"># We increase the batch size to reduce the instability</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_val_split</span><span class="p">,</span> <span class="n">y_val_split</span><span class="p">),</span>
+          <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stopping</span><span class="p">],</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Restoring model weights from the end of the best epoch: 26.
+Epoch 41: early stopping
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_acc_loss</span><span class="p">(</span><span class="n">stable_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5391ca550a5d10b6ba80141a63ceda3f591d08aaba1daee8aacca24f6bd20a67.png" src="_images/5391ca550a5d10b6ba80141a63ceda3f591d08aaba1daee8aacca24f6bd20a67.png" />
+<img alt="_images/226f93a922461ffc9b781cb3371905c73719b7b536244ddac3660a6ade3facdd.png" src="_images/226f93a922461ffc9b781cb3371905c73719b7b536244ddac3660a6ade3facdd.png" />
+</div>
+</div>
+<p>It seems that increasing the batch size is not enough to stabilize the model. The instability is due to the intrinsic nature of the problem. The loss is more penalized for the minority class, so the model is trying to adapt to it.</p>
+</section>
+</section>
+<section id="id8">
+<h2>Testing<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">weighted_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 1ms/step
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.90      0.94     18300
+           1       0.46      0.92      0.61      1700
+
+    accuracy                           0.90     20000
+   macro avg       0.73      0.91      0.78     20000
+weighted avg       0.95      0.90      0.92     20000
+
+
+Confusion Matrix:
+</pre></div>
+</div>
+<img alt="_images/ee860b6737341a34b13faf695f6106899eb01b0f39156532dc0a70898738cc44.png" src="_images/ee860b6737341a34b13faf695f6106899eb01b0f39156532dc0a70898738cc44.png" />
+</div>
+</div>
+<section id="test-set-considerations-what-happened">
+<h3>Test set considerations: What happened ?<a class="headerlink" href="#test-set-considerations-what-happened" title="Link to this heading">#</a></h3>
+<p>Looking at the results.. it seams like the  weighted model is going worse than the simple model…
+But is it really so?
+Maybe, sometimes you have just to change the point of view.</p>
+</section>
+<section id="changing-the-point-of-view-evaluate-the-model">
+<h3>Changing the point of view: evaluate the model<a class="headerlink" href="#changing-the-point-of-view-evaluate-the-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">weighted_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">,</span> <span class="n">normalize_param</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 0s 756us/step
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.90      0.94     18300
+           1       0.46      0.92      0.61      1700
+
+    accuracy                           0.90     20000
+   macro avg       0.73      0.91      0.78     20000
+weighted avg       0.95      0.90      0.92     20000
+
+
+Confusion Matrix:
+</pre></div>
+</div>
+<img alt="_images/6848d1b1ff58d37b824ee25c06e75d8cfb0febaf04bdb6144fb72d3b23c963a4.png" src="_images/6848d1b1ff58d37b824ee25c06e75d8cfb0febaf04bdb6144fb72d3b23c963a4.png" />
+</div>
+</div>
+<p>Now we can see that the model is actually doing a better job of identifying positive cases, without a signficant icrease in the number of false positives.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">weighted_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 855us/step
+</pre></div>
+</div>
+<img alt="_images/5af4e206676cbb58782d0e83133e675be1f0280e604d40d77167be75b3b8c536.png" src="_images/5af4e206676cbb58782d0e83133e675be1f0280e604d40d77167be75b3b8c536.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="id9">
+<h2>Considerations<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<p>So initially we thought that the model with class weights was not performing well. However, when we looked at the results from a different perspective, we realized that the model was actually doing a better job of identifying positive cases. This is because we’re trying to fix mistakes in one group but end up changing things in another.</p>
+<p>In our case scenario, we would prefer to have a model that is able to identify more cases of diabetes, even if it means making more mistakes in the process. This is because we want to prioritize the identification of individuals who may be unwell.</p>
+<p>It’s important to note that balancing the classes does not always make the model perform better. We need to explore different approaches to find what works best.</p>
+<p>Note: the AUC is still 0.98, we will discuss this later.</p>
+<section id="id10">
+<h3>Saving the model<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">weighted_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;weighted_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: weighted_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: weighted_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="compare-the-two-models">
+<h1>Compare the two models<a class="headerlink" href="#compare-the-two-models" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utility_functions</span> <span class="kn">import</span> <span class="n">evaluate_classification_models</span><span class="p">,</span> <span class="n">plot_roc_curves</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="evaluation-on-test-set">
+<h2>Evaluation on Test Set<a class="headerlink" href="#evaluation-on-test-set" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">simple_model</span><span class="p">,</span> <span class="n">weighted_model</span><span class="p">]</span> <span class="c1"># model1, model2</span>
+<span class="n">evaluate_classification_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">,</span> <span class="n">normalize_param</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 850us/step
+
+Classification Report - Model 1:
+              precision    recall  f1-score   support
+
+           0       0.97      1.00      0.98     18300
+           1       1.00      0.66      0.80      1700
+
+    accuracy                           0.97     20000
+   macro avg       0.98      0.83      0.89     20000
+weighted avg       0.97      0.97      0.97     20000
+625/625 [==============================] - 1s 1ms/step
+
+Classification Report - Model 2:
+              precision    recall  f1-score   support
+
+           0       0.99      0.90      0.94     18300
+           1       0.46      0.92      0.61      1700
+
+    accuracy                           0.90     20000
+   macro avg       0.73      0.91      0.78     20000
+weighted avg       0.95      0.90      0.92     20000
+</pre></div>
+</div>
+<img alt="_images/e22d83775e16aedf033a40ffd52aa4c19b08368bdb6002ec3d7b80594d450f97.png" src="_images/e22d83775e16aedf033a40ffd52aa4c19b08368bdb6002ec3d7b80594d450f97.png" />
+</div>
+</div>
+</section>
+<section id="plotting-roc-curves">
+<h2>Plotting ROC Curves<a class="headerlink" href="#plotting-roc-curves" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_roc_curves</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 1ms/step
+625/625 [==============================] - 0s 731us/step
+</pre></div>
+</div>
+<img alt="_images/aacd2d8531e2bd84e5caec98870a3b4e1a172ffad3bf45bb8ad5a9a94189f8bc.png" src="_images/aacd2d8531e2bd84e5caec98870a3b4e1a172ffad3bf45bb8ad5a9a94189f8bc.png" />
+</div>
+</div>
+</section>
+<section id="id11">
+<h2>Considerations<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p>We’ve tuned the model to predict positive cases more frequently, capturing additional instances of actual positives. This adjustment led to an improvement in recall with a significant loss in precision. In our application context, prioritizing the identification of individuals who may be unwell is more crucial than potentially allowing those who are genuinely unwell to go undetected.</p>
+<p>We cannot claim full satisfaction with the results obtained through class balancing, but we can say that the model <strong>is more suitable for our application context</strong>.</p>
+<p>The suboptimal outcomes may be attributed to the lack of robust features in our dataset, which could limit the effectiveness of class balancing strategies.</p>
+<p>Note that the AUC is the same for both models, probably because we are shifting the error from one group to another, ending up being wrong, somehow, in the same way.
+In general the AUC measure the capacity of the model to distinguish between classe at all classification thresholds.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="final-model">
+<h1>Final Model<a class="headerlink" href="#final-model" title="Link to this heading">#</a></h1>
+<section id="id12">
+<h2>Training<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<section id="fine-tuning">
+<h3>Fine Tuning<a class="headerlink" href="#fine-tuning" title="Link to this heading">#</a></h3>
+<p>We can improve our final model by training it on the validation set as well. This will allow the model to learn from more data and hopefully improve its performance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">early_stopping</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">last_hist</span> <span class="o">=</span> <span class="n">weighted_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_80</span><span class="p">,</span> <span class="n">y_train_80</span><span class="p">,</span>
+          <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight_dict</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+          <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+          <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stopping</span><span class="p">],</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Restoring model weights from the end of the best epoch: 3.
+Epoch 13: early stopping
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id13">
+<h2>Testing<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">weighted_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">,</span> <span class="n">normalize_param</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 0s 638us/step
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.93      0.96     18300
+           1       0.53      0.89      0.66      1700
+
+    accuracy                           0.92     20000
+   macro avg       0.76      0.91      0.81     20000
+weighted avg       0.95      0.92      0.93     20000
+
+
+Confusion Matrix:
+</pre></div>
+</div>
+<img alt="_images/cf89219d18822a1191bd49436be95959cae4e6e205668974d5589bdcccb4aab2.png" src="_images/cf89219d18822a1191bd49436be95959cae4e6e205668974d5589bdcccb4aab2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">weighted_model</span><span class="p">,</span> <span class="n">X_test_20</span><span class="p">,</span> <span class="n">y_test_20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>625/625 [==============================] - 1s 1ms/step
+</pre></div>
+</div>
+<img alt="_images/03b904e4c6e906dac16f59c9658f5f1bdd3ba7fd652e164427a4c0dad20f69ec.png" src="_images/03b904e4c6e906dac16f59c9658f5f1bdd3ba7fd652e164427a4c0dad20f69ec.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="conclusion-to-sum-up">
+<h1>Conclusion : To sum up<a class="headerlink" href="#conclusion-to-sum-up" title="Link to this heading">#</a></h1>
+<p>Initially, we started creating a simple model. We then tried to improve it by making it more complex. However, we realized that the simple model was actually performing better.
+We then tried to improve the simple model by balancing the classes, initially thinking that the model was not performing well. However, when we looked at the results from a different perspective, we realized that the model was actually doing a better job in our application context.
+We then fine-tuned the model by training it on the validation set as well. This allowed the model to learn from more data and hopefully improve its performance.</p>
+<section id="save-the-final-model">
+<h2>Save the final model<a class="headerlink" href="#save-the-final-model" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">weighted_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;final_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: final_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: final_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p>Tan, P.-N., Steinbach, M., &amp; Kumar, V. (Year). <em>Introduction to Data Mining</em> (2nd ed.). Publisher.</p></li>
+<li><p><a class="reference external" href="https://www.geeksforgeeks.org/auc-roc-curve/#what-is-the-aucroc-curve">https://www.geeksforgeeks.org/auc-roc-curve/#what-is-the-aucroc-curve</a></p></li>
+<li><p><a class="reference external" href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=it#:~:text=AUC%20stands%20for%20%22Area%20under,across%20all%20possible%20classification%20thresholds">https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc?hl=it#:~:text=AUC stands for “Area under,across all possible classification thresholds</a>.</p></li>
+</ol>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_Practical_Implementation_Dataset_Preprocessing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Preparation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_Comparison_Random_Forest_vs_Neural_Network.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Extra: Random Forest vs Artificial Neural Network</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Practical Implementation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#baseline-accuracy">Baseline Accuracy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#splitting-the-training-set-in-train-and-validation">Splitting the Training Set in Train and Validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-functions">Plotting Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-functions">Evaluation Functions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-metrics">Evaluation Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f1-score">F1 Score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision">Precision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recall">Recall</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-curve">ROC Curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-model">Simple Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weights">Weights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-change-in-accuracy-and-loss-during-training">Plot the change in accuracy and loss during training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#early-stopping">Early Stopping</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saving-the-model">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#complex-model">Complex Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Weights</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#class-weight-model">Class Weight Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Plot the change in accuracy and loss during training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trying-to-stabilize-the-model">Trying to stabilize the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-set-considerations-what-happened">Test set considerations: What happened ?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changing-the-point-of-view-evaluate-the-model">Changing the point of view: evaluate the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Saving the model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-two-models">Compare the two models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-on-test-set">Evaluation on Test Set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-roc-curves">Plotting ROC Curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-model">Final Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tuning">Fine Tuning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Testing</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-to-sum-up">Conclusion : To sum up</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#save-the-final-model">Save the final model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Domenico Sosta
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

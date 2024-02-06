@@ -1,0 +1,1029 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Perceptron &#8212; Artificial Neural Networks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=afe5de03"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '02_Perceptron_and_MultiLayer_Neural_Network';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Preparation" href="03_Practical_Implementation_Dataset_Preprocessing.html" />
+    <link rel="prev" title="What are Artificial Neural Networks?" href="01_Introduction_to_ANN.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="00_Intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Artificial Neural Networks - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Artificial Neural Networks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="00_Intro.html">
+                    Artificial Neural Networks Project
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_Introduction_to_ANN.html">What are Artificial Neural Networks?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Perceptron</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="03_Practical_Implementation_Dataset_Preprocessing.html">Data Preparation</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="04_Practical_Implementation_ANN_Modelling_and_Optimization_Pipeline.html">Practical Implementation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="05_Comparison_Random_Forest_vs_Neural_Network.html">Extra: Random Forest vs Artificial Neural Network</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F02_Perceptron_and_MultiLayer_Neural_Network.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/02_Perceptron_and_MultiLayer_Neural_Network.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Perceptron</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Perceptron</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-architecture-of-a-perceptron">Basic Architecture of a Perceptron</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-perceptrons-learn">How Perceptrons learn?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-xor-classification-problem">Training: XOR classification problem</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-perceptron-what-kind-of-activation-function-should-we-use">Create a perceptron: what kind of activation function should we use?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-perceptron-loss-function-and-optimizer">Create a perceptron: loss function and optimizer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-xor-classification-problem">Testing: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptrons-limitations">Perceptrons: Limitations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multilayer-neural-netorks">Multilayer Neural-Netorks</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-a-neural-network">Structure of a Neural Network</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#input-layer">Input Layer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hidden-layer">Hidden Layer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-layer">Output Layer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-do-they-learn">How do they learn?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent">Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-how-the-learning-process-works">Here is how the learning process works:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backpropagation-the-key-to-learning">Backpropagation: the key to learning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Training: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Testing: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations">Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-tree-classifier-vs-neural-network-classifier-in-xor-classification-problem">Decision Tree classifier Vs Neural Network classifier in XOR classification problem</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="perceptron">
+<h1>Perceptron<a class="headerlink" href="#perceptron" title="Link to this heading">#</a></h1>
+<p>Artificial neural networks are not a recent concept; in fact, they trace their origins back to the 1960s when they took the form of perceptrons—a basic type of artificial neural network. This architecture comprises two primary node types: input nodes representing input attributes and output nodes depicting the model’s output. As time passed, the perceptron concept evolved into multilayer perceptrons, now synonymous with modern artificial neural networks.
+Despite their existence for decades, the recent surge in popularity is shaped by factors such as limited computer processing power and a scarcity of training data. The current landscape is undergoing significant changes; computers are becoming faster and more powerful, and the internet serves as an abundant source of diverse data. This transformative era signifies the widespread adoption and advancement of artificial neural networks.</p>
+<section id="basic-architecture-of-a-perceptron">
+<h2>Basic Architecture of a Perceptron<a class="headerlink" href="#basic-architecture-of-a-perceptron" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Input layer:
+The perceptron takes multiple binary input features, often denoted as <span class="math notranslate nohighlight">\( x_1, x_2, \ldots, x_n \)</span>.</p></li>
+<li><p>Weights and Bias:
+Each input is multiplied by its corresponding weight. The weights represent the importance of the respective inputs in the decision-making process of the perceptron. Mathematically, the weighted sum is calculated as <span class="math notranslate nohighlight">\(\sum_{i=1}^{n} w_i x_i\)</span>.
+The weighted sum is then added to a bias term <span class="math notranslate nohighlight">\(b\)</span>, which represents the perceptron’s tendency to fire. The bias shifts the decision boundary of the perceptron.</p></li>
+<li><p>Activation function:
+The weighted sum <span class="math notranslate nohighlight">\(z\)</span> is passed through an activation function. The purpose of the activation function is to introduce non-linearity into the system.</p></li>
+<li><p>Output:
+The output of the activation function is the perceptron’s output, often denoted as <span class="math notranslate nohighlight">\(y\)</span>.</p></li>
+</ol>
+<p><img alt="6_20.png" src="_images/6_20.png" /></p>
+<p>Image credits: Tan, P.-N., Steinbach, M., &amp; Kumar, V. (Year). <em>Introduction to Data Mining</em> (2nd ed.). Publisher.</p>
+</section>
+<section id="how-perceptrons-learn">
+<h2>How Perceptrons learn?<a class="headerlink" href="#how-perceptrons-learn" title="Link to this heading">#</a></h2>
+<p>Perceptrons learn through a process called <strong>perceptron learning</strong> or the <strong>perceptron training algorithm</strong>. The goal is to adjust the weights and bias in such a way that the perceptron can correctly classify input patterns.
+The role of the <strong>loss function</strong> is crucial in this process, as it measures the discrepancy between the perceptron’s predictions and the actual labels. This guides the adjustments of weights and bias to enhance the accuracy of classification. The goal is to minimize the loss function to improve the model’s performance.</p>
+<p><strong>Perceptron Learning Algorithm:</strong></p>
+<ol class="arabic simple">
+<li><p>Leht <span class="math notranslate nohighlight">\( D_{\text{train}} = \{(x_i^\sim, y_i) \mid i = 1, 2, \ldots, n\} \)</span> be the set of training instances.</p></li>
+<li><p>Set <span class="math notranslate nohighlight">\(k \leftarrow 0\)</span>.</p></li>
+<li><p>Initialize the weight vector <span class="math notranslate nohighlight">\(\mathbf{w}^{\sim^{(0)}}\)</span> with random values.</p></li>
+<li><p><strong>repeat</strong></p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\)</span> <strong>for each training instance</strong> <span class="math notranslate nohighlight">\((x_i^\sim, y_i)\ in\quad D_{\text{train}}\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\quad\)</span> compute the predicted output <span class="math notranslate nohighlight">\(\hat{y}^{(k)}\)</span> using <span class="math notranslate nohighlight">\(\mathbf{w}^{\sim^{(k)}}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\quad\)</span> <strong>for each weight component</strong> <span class="math notranslate nohighlight">\(w_j\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\quad\quad\)</span> update the weight: <span class="math notranslate nohighlight">\(w^{(k+1)}_j = w^{(k)}_j + \lambda (y_i - \hat{y}^{(k)}) x_{ij}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\quad\)</span> <strong>end for</strong></p></li>
+<li><p><span class="math notranslate nohighlight">\(\quad\)</span> <strong>Update</strong> <span class="math notranslate nohighlight">\( k \leftarrow k + 1 \)</span>.</p></li>
+<li><p><strong>end for</strong></p></li>
+<li><p><strong>Until</strong> <span class="math notranslate nohighlight">\(\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}^{(k)})  \)</span> <strong>is less than a threshold</strong> <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
+</ol>
+</section>
+<section id="training-xor-classification-problem">
+<h2>Training: XOR classification problem<a class="headerlink" href="#training-xor-classification-problem" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utility_functions</span> <span class="kn">import</span> <span class="n">plot_confusion_matrix</span><span class="p">,</span> <span class="n">plot_training_history</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Can a perceptron learn the XOR function? Let’s try!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dati di input e output per XOR</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ff22752d673afd62222110fdf49e7a90737b0116681d4400d8b6d8b3efe03275.png" src="_images/ff22752d673afd62222110fdf49e7a90737b0116681d4400d8b6d8b3efe03275.png" />
+</div>
+</div>
+<p>Ok, it can be noticed that there is no linear decision boundary that can separate the two classes.</p>
+<section id="create-a-perceptron-what-kind-of-activation-function-should-we-use">
+<h3>Create a perceptron: what kind of activation function should we use?<a class="headerlink" href="#create-a-perceptron-what-kind-of-activation-function-should-we-use" title="Link to this heading">#</a></h3>
+<p>What kind of activation function should we use, for the output layer?
+We have a simple binary classification problem, so we can use the sigmoid function, that allows us to map the output to a probability. We can interpret the output as the probability of the input belonging to class 1, taking values &gt; 0.5 as class 1 and values &lt;= 0.5 as class 0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s create a perceptron</span>
+<span class="n">perceptron_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+<span class="n">perceptron_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-a-perceptron-loss-function-and-optimizer">
+<h3>Create a perceptron: loss function and optimizer<a class="headerlink" href="#create-a-perceptron-loss-function-and-optimizer" title="Link to this heading">#</a></h3>
+<p>What kind of loss function should we use?
+Since we have a binary classification problem, we can use the binary crossentropy loss function.
+The optimizer is the algorithm that will be used to update the weights in order to minimize the loss function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile the model</span>
+<span class="n">perceptron_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
+
+<span class="c1"># Train the model</span>
+<span class="n">hist</span> <span class="o">=</span> <span class="n">perceptron_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the model</span>
+<span class="n">perceptron_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;perceptron_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: perceptron_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: perceptron_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="testing-xor-classification-problem">
+<h2>Testing: XOR classification problem<a class="headerlink" href="#testing-xor-classification-problem" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">perceptron_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1/1 [==============================] - 0s 56ms/step
+</pre></div>
+</div>
+<img alt="_images/893c92bcf9587e18728376424c48ee78ed8fcf13d313956b3c312d7c500a4039.png" src="_images/893c92bcf9587e18728376424c48ee78ed8fcf13d313956b3c312d7c500a4039.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_training_history</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/87b455cd5850ca65f9a1b8ec6458e972755199728dd77ddb4428b2f376e2d40d.png" src="_images/87b455cd5850ca65f9a1b8ec6458e972755199728dd77ddb4428b2f376e2d40d.png" />
+<img alt="_images/016c3bcc6a6524f36ea6875f4d055a0e5a18454cf154493c40802d22b728057b.png" src="_images/016c3bcc6a6524f36ea6875f4d055a0e5a18454cf154493c40802d22b728057b.png" />
+</div>
+</div>
+</section>
+<section id="perceptrons-limitations">
+<h2>Perceptrons: Limitations<a class="headerlink" href="#perceptrons-limitations" title="Link to this heading">#</a></h2>
+<p>What happens ? It seems that the perceptron is not able to learn the XOR function. Why?
+The perceptron is a linear classifier, so it can only learn linearly separable patterns. The XOR function is not linearly separable, so the perceptron is not able to learn it.
+This limitation is a significant drawback, as most real-world problems are non-linear. However, this limitation can be overcome by using multilayer perceptrons, which are capable of learning non-linear patterns.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="multilayer-neural-netorks">
+<h1>Multilayer Neural-Netorks<a class="headerlink" href="#multilayer-neural-netorks" title="Link to this heading">#</a></h1>
+<p>We can extend the fundamental concept of a perceptron to a more structured and intricate framework by introducing a multi-layer neural network. This structured approach enables the network to learn complex patterns and nonlinear decision boundaries.</p>
+<section id="structure-of-a-neural-network">
+<h2>Structure of a Neural Network<a class="headerlink" href="#structure-of-a-neural-network" title="Link to this heading">#</a></h2>
+<p>Examining a “typical” neural network, we can conceptually divide its structure into three parts: Input Layer, Hidden Layer, and Output Layer.</p>
+<section id="input-layer">
+<h3>Input Layer<a class="headerlink" href="#input-layer" title="Link to this heading">#</a></h3>
+<p>The <em>input layer</em> is the first layer of a neural network and contains a number of neurons equal to the number of features in the dataset. Each neuron in the input layer represents a specific feature of the dataset. It’s important to note that the input layer does not perform any computation on the information; instead, its primary function is to transmit the data to the first hidden layer.</p>
+<p>In the transmission process, the feature values are multiplied by the respective weights associated with the connections between the neurons of the input layer and those of the first hidden layer. These weights represent the relative importance of each feature in contributing to the activations of neurons in the next hidden layer.</p>
+</section>
+<section id="hidden-layer">
+<h3>Hidden Layer<a class="headerlink" href="#hidden-layer" title="Link to this heading">#</a></h3>
+<p>The <em>hidden layer</em> is the core of a neural network. It consists of an arbitrary number of neurons, each of which receives input values from the input layer. Each neuron in the hidden layer calculates a linear combination of the feature values and the respective weights associated with the connections between the neurons of the input layer and those of the hidden layer.</p>
+<p>This linear combination is then passed through an activation function, introducing non-linearity into the system. The output of the activation function is finally passed to the neuron of the next hidden layer, and so on until the output layer. The number of hidden layers and the number of neurons in each hidden layer are two hyperparameters that must be chosen during the design of the neural network.</p>
+</section>
+<section id="output-layer">
+<h3>Output Layer<a class="headerlink" href="#output-layer" title="Link to this heading">#</a></h3>
+<p>The <em>output layer</em> is the last layer of a neural network. Its composition depends on the nature of the problem being solved:</p>
+<ul class="simple">
+<li><p>For <strong>classification problems</strong>, the output layer consists of a number of neurons equal to the number of classes in the dataset. Each neuron represents a specific class. The output layer calculates a linear combination of the feature values and the respective weights associated with the connections between the neurons of the last hidden layer and those of the output layer. This linear combination is then passed through an activation function, introducing non-linearity into the system. The output of the activation function represents the probability that the input belongs to the class represented by the neuron of the output layer. The neuron of the output layer with the highest probability determines the class predicted by the algorithm.</p></li>
+<li><p>For <strong>regression problems</strong>, where the goal is to predict a continuous value, the output layer typically consists of a single neuron. The output is the result of a linear combination of the feature values and the respective weights associated with the connections between the neurons of the last hidden layer and the output neuron. In this case, there is no activation function applied, and the output represents the continuous prediction for the regression problem.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p><img alt="structure_of_ANN" src="_images/structure_of_ANN.jpg" /></p>
+<p>Image credits : <a class="reference external" href="https://towardsdatascience.com/designing-your-neural-networks-a5e4617027ed">https://towardsdatascience.com/designing-your-neural-networks-a5e4617027ed</a></p>
+<section id="how-do-they-learn">
+<h2>How do they learn?<a class="headerlink" href="#how-do-they-learn" title="Link to this heading">#</a></h2>
+<p>The key idea is to provide the network a set of training instances (X, y) and making the network predict a certain label y_hat. Initially, the weights of the network will be random, and the network will perform pretty horrible on the training data. Therefore, what will be necessary to define is a cost function, a way to communicate to the network how much it is getting wrong. However, telling the computer how bad its prediction is will not help it improve. In fact, to achieve improvements, it will be necessary to modify the weights of the network. We can imagine the cost function as a function that takes as input all the weights and biases of the network, and a numeber that says how much is getting wrong as output. Our goal is to minimize this function, but it’s not always possible through analytical methods alone, so instead we ask our self: what is the direction in witch I should modify the weights to make the cost function smaller?
+The gradient is the vector that tells us the direction in witch we should modify the weights to make the cost function smaller.</p>
+<section id="gradient-descent">
+<h3>Gradient Descent<a class="headerlink" href="#gradient-descent" title="Link to this heading">#</a></h3>
+<p><img alt="gradient_descent" src="_images/gradient_descent.gif" /></p>
+<p>Image credits : <a class="reference external" href="https://medium.com/&#64;yennhi95zz/4-a-beginners-guide-to-gradient-descent-in-machine-learning-773ba7cd3dfe">https://medium.com/&#64;yennhi95zz/4-a-beginners-guide-to-gradient-descent-in-machine-learning-773ba7cd3dfe</a></p>
+<p>The gradient descent algorithm is an iterative algorithm that allows us to find the minimum of a function.
+Think of gradient descent like exploring hills. The cost function is like a hilly surface, where each point represents different parameter values. You start at a point, look around, and take a small step in the steepest downhill direction, getting closer to a valley. Repeat this until you reach a local minimum, the lowest point in a valley.</p>
+<p>It’s important to note that some cost functions may have multiple local minima. When running gradient descent, the algorithm converges to the nearest local minimum based on the initial parameter values. If a different starting point is chosen, the algorithm may converge to a different local minimum.
+Consequentially finding an absolute minimum is not guaranteed.</p>
+</section>
+<section id="here-is-how-the-learning-process-works">
+<h3>Here is how the learning process works:<a class="headerlink" href="#here-is-how-the-learning-process-works" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Initialization of the network weights randomly. These weights represent the parameters that the network will learn during training.</p></li>
+<li><p>Training the network for a predetermined number of epochs:</p>
+<ol class="arabic simple">
+<li><p>For each training instance (X, y):</p>
+<ol class="arabic simple">
+<li><p>Calculate the predicted output y_hat of the network for input X.</p></li>
+<li><p>Calculate the error of the network by comparing y_hat with the actual label y.</p></li>
+<li><p><strong>Backpropagation</strong>: Calculate the local error for each output node and propagate the error backward through the network, and compute the gradient of the loss function.</p></li>
+</ol>
+</li>
+<li><p><strong>Weight Update</strong>: Use an optimization algorithm (i.e., gradient descent) to update the weights.</p></li>
+</ol>
+</li>
+<li><p>End of training.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="backpropagation-the-key-to-learning">
+<h3>Backpropagation: the key to learning<a class="headerlink" href="#backpropagation-the-key-to-learning" title="Link to this heading">#</a></h3>
+<p><img alt="backpropagation" src="_images/backpropagation.gif" /></p>
+<p>Image credits :<a class="reference external" href="https://machinelearningknowledge.ai/wp-content/uploads/2019/10/Backpropagation.gif">https://machinelearningknowledge.ai/wp-content/uploads/2019/10/Backpropagation.gif</a></p>
+<p>Backpropagation is the algorithm that computes the gradient of the loss function witch tells the direction in witch we should modify the weights to make the cost function smaller. Maybe thinking at the direction in a space of thousands of dimensions is not so intuitive, we can instead think about the Backpropagation as the algorithm for determining how a single training example would like change the network weights and biases.</p>
+</section>
+</section>
+<section id="id2">
+<h2>Training: XOR classification problem<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Can a multilayer neural-network learn the XOR function? Let’s try!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dati di input e output per XOR</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s create a neural network</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="c1">#Multilayer creation</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+
+<span class="c1">#output layer</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile the model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
+
+<span class="c1"># Train the model</span>
+<span class="n">hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>Testing: XOR classification problem<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1/1 [==============================] - 0s 46ms/step
+</pre></div>
+</div>
+<img alt="_images/b72aadd04aeaf6a5566aec61fde72cc8841c9a5caaba360c86540818b4243fa1.png" src="_images/b72aadd04aeaf6a5566aec61fde72cc8841c9a5caaba360c86540818b4243fa1.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_training_history</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5a8fe69e4a93122b464e8f3b808c0e6a3663747c38c8886379d738dc4fb54498.png" src="_images/5a8fe69e4a93122b464e8f3b808c0e6a3663747c38c8886379d738dc4fb54498.png" />
+<img alt="_images/66554b66bb90de9a35cd9c3f5c9f09d714f87641eaafcdc7669de7ed6dcb3d07.png" src="_images/66554b66bb90de9a35cd9c3f5c9f09d714f87641eaafcdc7669de7ed6dcb3d07.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Save the model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;xor_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: xor_model/assets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:tensorflow:Assets written to: xor_model/assets
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="considerations">
+<h2>Considerations<a class="headerlink" href="#considerations" title="Link to this heading">#</a></h2>
+<p>The network is able to learn the XOR function, but it takes a lot of epochs to do so. Why? The network is simple, so it has a low capacity. It is not able to learn complex patterns, so it needs a lot of epochs to learn the XOR function.</p>
+<p>Note: We’re intentionally attempting to overfit the data, so it would be preferable to opt for a more complex model to compensate for the number of training epochs.</p>
+<p>We can increase the expressiveness of the network by adding more layers and more neurons. This will increase the capacity of the network, allowing it to learn more complex patterns.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="decision-tree-classifier-vs-neural-network-classifier-in-xor-classification-problem">
+<h1>Decision Tree classifier Vs Neural Network classifier in XOR classification problem<a class="headerlink" href="#decision-tree-classifier-vs-neural-network-classifier-in-xor-classification-problem" title="Link to this heading">#</a></h1>
+<p>Decision trees are a non-parametric supervised learning method used for classification and regression. The goal is to create a model that predicts the value of a target variable by learning simple decision rules inferred from the data features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="c1"># Input e output data for XOR</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Create the Decision Tree classifier</span>
+<span class="n">decision_tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Train the Decision Tree classifier on XOR</span>
+<span class="n">decision_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># Create a meshgrid to visualize the decision boundary</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+
+<span class="c1"># Prediction for each point in the meshgrid</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">decision_tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Visualize the decision boundary</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Feature 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Feature 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Decision Boundary del Decision Tree per XOR&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/abf85b9df3c77ab53ff79488ce2928b8e59f291a2eb7d6281807334b528c8cfb.png" src="_images/abf85b9df3c77ab53ff79488ce2928b8e59f291a2eb7d6281807334b528c8cfb.png" />
+</div>
+</div>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>We can observe that the Decision Tree classifier is able to learn the XOR function more efficiently than the Neural Network classifier. This is because the Decision Tree classifier is a non-parametric model, this means that it does not fix “a priori” the number of parameters to be learned. In other words, the model’s complexity grows with the size of the data or the complexity of the problem, and it is not limited by a predetermined number of parameters.</p>
+<p>So it is able to learn complex patterns without the need for a large number of training instances. On the other hand, the Neural Network classifier is a parametric model, so it needs a large number of training instances to learn complex patterns. This is why the Neural Network classifier needs a large number of epochs to learn the XOR function.</p>
+<p>Moreover, training a neural network, especially on a problem like XOR, can demand more computational resources compared to training a Decision Tree.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://towardsdatascience.com/designing-your-neural-networks-a5e4617027ed">https://towardsdatascience.com/designing-your-neural-networks-a5e4617027ed</a></p></li>
+<li><p><a class="reference external" href="https://medium.com/&#64;yennhi95zz/4-a-beginners-guide-to-gradient-descent-in-machine-learning-773ba7cd3dfe">https://medium.com/&#64;yennhi95zz/4-a-beginners-guide-to-gradient-descent-in-machine-learning-773ba7cd3dfe</a></p></li>
+<li><p>Tan, P.-N., Steinbach, M., &amp; Kumar, V. (Year). <em>Introduction to Data Mining</em> (2nd ed.). Publisher.</p></li>
+</ol>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_Introduction_to_ANN.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">What are Artificial Neural Networks?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03_Practical_Implementation_Dataset_Preprocessing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Preparation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Perceptron</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-architecture-of-a-perceptron">Basic Architecture of a Perceptron</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-perceptrons-learn">How Perceptrons learn?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-xor-classification-problem">Training: XOR classification problem</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-perceptron-what-kind-of-activation-function-should-we-use">Create a perceptron: what kind of activation function should we use?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-perceptron-loss-function-and-optimizer">Create a perceptron: loss function and optimizer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-xor-classification-problem">Testing: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptrons-limitations">Perceptrons: Limitations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multilayer-neural-netorks">Multilayer Neural-Netorks</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-a-neural-network">Structure of a Neural Network</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#input-layer">Input Layer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hidden-layer">Hidden Layer</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-layer">Output Layer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-do-they-learn">How do they learn?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent">Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-how-the-learning-process-works">Here is how the learning process works:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backpropagation-the-key-to-learning">Backpropagation: the key to learning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Training: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Testing: XOR classification problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations">Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-tree-classifier-vs-neural-network-classifier-in-xor-classification-problem">Decision Tree classifier Vs Neural Network classifier in XOR classification problem</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Domenico Sosta
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
